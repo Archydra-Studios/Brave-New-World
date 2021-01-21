@@ -1,9 +1,5 @@
-# Fabric Example Mod
+# Brave New World
 
-## Setup
+Dawn breaks anew! March through parched sands with the sun scorching your back, thread through white-clad thundras as your blood freezes, take one last breath as wounds and gashes drain your lifeforce away. Will you conquer this brash, brutal nature... or will it conquer you?
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+Shall you propser in this brave new world, clad with new, unforgiving mechanics? Or will you fall victim to weather, plant, and and clumsiness.
