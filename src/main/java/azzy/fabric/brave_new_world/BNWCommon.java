@@ -1,4 +1,4 @@
-package net.fabricmc.example;
+package azzy.fabric.brave_new_world;
 
 import net.fabricmc.api.ModInitializer;
 

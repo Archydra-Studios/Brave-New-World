@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "ExampleMixin"
+    "azzy.fabric.brave_new_world.mixin.ExampleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
