@@ -14,14 +14,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 
 public class TemperatureComponentImpl implements TemperatureComponent, AutoSyncedComponent {
-
     private double temperature = 32;
-
+    private double lastTemperature = temperature;
+    
     @Override
     public double getTemperature() {
         return temperature;
     }
-
+    
+    @Override
+    public double getLastTemperature() {
+        return lastTemperature;
+    }
+    
     @Override
     public void setTemperature(double temperature) {
         this.temperature = temperature;
@@ -30,15 +35,17 @@ public class TemperatureComponentImpl implements TemperatureComponent, AutoSynce
     @Override
     public void readFromNbt(CompoundTag compoundTag) {
         temperature = compoundTag.getDouble("temperature");
+        lastTemperature = compoundTag.getDouble("lastTemperature");
     }
 
     @Override
     public void writeToNbt(CompoundTag compoundTag) {
         compoundTag.putDouble("temperature", temperature);
+        compoundTag.putDouble("lastTemperature", lastTemperature);
     }
-
-
+    
     public void tick(ServerPlayerEntity entity) {
+        lastTemperature = temperature;
         ServerWorld world = (ServerWorld) entity.world;
         BlockPos pos = entity.getBlockPos();
         //if(world.getBiome(entity.getBlockPos()).getCategory() == Biome.Category.DESERT)
@@ -49,16 +56,19 @@ public class TemperatureComponentImpl implements TemperatureComponent, AutoSynce
             }
             temperature += (0.02 - ((pos.getY() - (world.getSeaLevel())) / 10000.0));
         }
+        /*
         if(world.getTime() % 20 == 0) {
             entity.sendMessage(new LiteralText("" + world.getTime() / 20), false);
             entity.sendMessage(new LiteralText("Temp: " + temperature), false);
             entity.sendMessage(new LiteralText("Biome Temp: " + HeatHelper.translateBiomeHeat(entity.world.getBiome(entity.getBlockPos()), !world.isDay(), world.isRaining(), pos.getY())), false);
         }
+         */
     }
 
     @Override
     public void respawnTick(ServerPlayerEntity entity) {
         temperature = 32;
+        lastTemperature = temperature;
     }
 
     @Override
