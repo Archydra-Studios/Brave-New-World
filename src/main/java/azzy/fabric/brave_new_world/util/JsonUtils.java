@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import org.apache.commons.io.IOUtils;
-import sun.nio.ch.IOUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;

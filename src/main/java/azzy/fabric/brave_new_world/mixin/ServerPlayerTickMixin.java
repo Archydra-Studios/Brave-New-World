@@ -11,25 +11,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerTickMixin {
-
-    private final ServerPlayerEntity player = ServerPlayerEntity.class.cast(this);
-    private final TemperatureComponent temperatureComponent = BNWComponents.TEMPERATURE_KEY.get(player);
-
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
-        temperatureComponent.tick(player);
+        ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+        BNWComponents.TEMPERATURE_KEY.get(player).tick(player);
         BNWComponents.TEMPERATURE_KEY.sync(player);
     }
 
     @Inject(method = "moveToSpawn", at = @At("TAIL"))
     public void spawn(CallbackInfo ci) {
-        temperatureComponent.respawnTick(player);
+        ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+        BNWComponents.TEMPERATURE_KEY.get(player).respawnTick(player);
         BNWComponents.TEMPERATURE_KEY.sync(player);
     }
 
     @Inject(method = "onDeath", at = @At("TAIL"))
     public void death(CallbackInfo ci) {
-        temperatureComponent.markRefresh();
+        ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+        BNWComponents.TEMPERATURE_KEY.get(player).markRefresh();
         BNWComponents.TEMPERATURE_KEY.sync(player);
     }
 }

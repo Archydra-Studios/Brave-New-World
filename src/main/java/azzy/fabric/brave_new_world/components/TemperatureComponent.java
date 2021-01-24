@@ -4,8 +4,8 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public interface TemperatureComponent extends Component {
-
     double getTemperature();
+    double getLastTemperature();
 
     void setTemperature(double temperature);
     void tick(ServerPlayerEntity entity);
