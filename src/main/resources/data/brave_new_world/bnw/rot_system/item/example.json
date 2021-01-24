@@ -1,3 +1,6 @@
 {
-  "cum": "cum"
+  "special": false,
+  "item": "minecraft:milk",
+  "max_age": 24000
+
 }

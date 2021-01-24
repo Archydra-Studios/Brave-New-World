@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "brave_new_world",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Brave New World",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "Azazelthedemonlord"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -14,16 +14,30 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/brave_new_world/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "azzy.fabric.brave_new_world.BNWCommon"
+    ],
+    "client": [
+      "azzy.fabric.brave_new_world.BNWClient"
+    ],
+    "cardinal-components": [
+      "azzy.fabric.brave_new_world.BNWComponents"
     ]
   },
+
+  "custom": {
+    "cardinal-components": [
+      "brave_new_world:temperature",
+      "brave_new_world:rot"
+    ]
+  },
+
   "mixins": [
-    "modid.mixins.json"
+    "brave_new_world.mixins.json"
   ],
 
   "depends": {

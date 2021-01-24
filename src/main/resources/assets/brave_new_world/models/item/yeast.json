@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "brave_new_world:item/hummus"
+    "layer0": "brave_new_world:item/yeast"
   }
 }
