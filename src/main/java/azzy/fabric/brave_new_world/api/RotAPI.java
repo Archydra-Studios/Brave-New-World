@@ -6,23 +6,21 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.IntRange;
+import net.minecraft.util.registry.Registry;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 
 public class RotAPI {
 
-    private static final Object2ObjectOpenHashMap<Item, String> specialRegistry = new Object2ObjectOpenHashMap<>();
-    private static final Object2ObjectOpenHashMap<Item, Item> rotRegistry = new Object2ObjectOpenHashMap<>();
-    private static final Object2IntOpenHashMap<Item> ageRegistry = new Object2IntOpenHashMap<>();
-
-    private static final Object2ObjectOpenHashMap<Item, String> specialMap = new Object2ObjectOpenHashMap<>();
+    private static final Object2ObjectOpenHashMap<Item, SpecialFoodData> specialMap = new Object2ObjectOpenHashMap<>();
     private static final Object2ObjectOpenHashMap<Item, Item> rotMap = new Object2ObjectOpenHashMap<>();
     private static final Object2IntOpenHashMap<Item> ageMap = new Object2IntOpenHashMap<>();
+    private static final Object2IntOpenHashMap<Item> nomMap = new Object2IntOpenHashMap<>();
 
     public static Item getRotProduct(Item item) {
         return rotMap.get(item);
@@ -40,29 +38,15 @@ public class RotAPI {
         return ageMap.containsKey(item);
     }
 
-    public static void registerRottingProduct(Item input, Item product) {
-        rotRegistry.put(input, product);
-    }
-
-    public static void registerRottingTime(Item input, int time) {
-        ageRegistry.put(input, time);
-    }
-
     public static void load(ResourceManager manager) {
         rotMap.clear();
         ageMap.clear();
+        nomMap.clear();
         specialMap.clear();
-
         manager.findResources("bnw/rot_system/item", path -> path.endsWith(".json")).forEach(id -> load(manager, id));
-
-        rotMap.putAll(rotRegistry);
-        ageMap.putAll(ageRegistry);
-        specialMap.putAll(specialRegistry);
     }
 
     public static void load(ResourceManager manager, Identifier resourceId) {
-        Identifier id = new Identifier(resourceId.getNamespace(), resourceId.getPath().replace(".json", ""));
-
         try {
             InputStream stream = manager.getResource(resourceId).getInputStream();
             JsonObject rotJson = JsonUtils.fromInputStream(stream);
@@ -71,11 +55,49 @@ public class RotAPI {
             } else {
             }
         } catch (Exception e) {
-            BNWCommon.BNW_LOG.error("Error found while loading rot system json " + resourceId.toString() + "!", e);
+            BNWCommon.LOG.error("Error found while loading rot system json " + resourceId.toString() + "!", e);
         }
     }
 
-    //static {
-//
-    //}
+    public static class SpecialFoodData {
+        public final int consumeTime;
+        public final IntRange rotTempRange;
+        public final int burnTemp;
+        public final Item burnResult;
+
+        public SpecialFoodData(int consumeTime, IntRange rotTempRange, int burnTemp, Item burnResult ) {
+            this.consumeTime = consumeTime;
+            this.rotTempRange = rotTempRange;
+            this.burnTemp = burnTemp;
+            this.burnResult = burnResult;
+        }
+
+        public SpecialFoodData from(JsonObject foodDataObject) {
+            JsonElement cont = foodDataObject.get("consume_time");
+            JsonElement mint = foodDataObject.get("min_rot_temp");
+            JsonElement maxt = foodDataObject.get("max_rot_temp");
+            JsonElement burnt = foodDataObject.get("rot_temp");
+            Item result = null;
+            if(foodDataObject.has("burn_result"))
+                result = Registry.ITEM.get(Identifier.tryParse(foodDataObject.get("burn_result").getAsString()));
+
+            IntRange range = null;
+            if(mint != null && maxt != null)
+                range = new IntRange(mint.getAsInt(), maxt.getAsInt());
+            return new SpecialFoodData(
+                    cont != null ? cont.getAsInt() : -1,
+                    range,
+                    burnt != null ? burnt.getAsInt() : -1,
+                    result
+            );
+        }
+
+        public boolean canBurn() {
+            return burnResult != null;
+        }
+
+        public boolean hasSpecialConsumeTime() {
+            return consumeTime > 0;
+        }
+    }
 }

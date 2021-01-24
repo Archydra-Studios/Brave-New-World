@@ -18,16 +18,19 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.VanillaDataPackProvider;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class BNWCommon implements ModInitializer {
 
 	public static final String MOD_ID = "brave_new_world";
 
-	public static final Logger BNW_LOG = LogManager.getLogger("Brave New World");
+	public static final Logger LOG = LogManager.getLogger("Brave New World");
 
 	public static final ItemGroup BNW_ITEMS = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "items"), () -> new ItemStack(Items.HONEY_BOTTLE));
 

@@ -16,10 +16,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BNWWorldEvents {
 
-    private static final Object2IntOpenHashMap<Class<? extends BlockEntity>> blockEntityInvMap = new Object2IntOpenHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends BlockEntity>, Integer> blockEntityInvMap = new ConcurrentHashMap<>();
 
     public static void init() {
         ServerTickEvents.END_WORLD_TICK.register(serverWorld -> {
@@ -28,7 +29,7 @@ public class BNWWorldEvents {
                     if(blockEntity instanceof Inventory) {
                         Class<? extends BlockEntity> clazz = blockEntity.getClass();
                         if(blockEntityInvMap.containsKey(clazz)) {
-                            for(int slot = 0; slot < blockEntityInvMap.getInt(clazz); slot++) {
+                            for(int slot = 0; slot < blockEntityInvMap.get(clazz); slot++) {
                                 ItemStack stack = ((Inventory) blockEntity).getStack(slot);
                                 if(((RottableFoodItem) stack.getItem()).canRot()) {
                                     ((RottableStack) (Object) stack).tickRot(serverWorld, (Inventory) blockEntity, slot);
